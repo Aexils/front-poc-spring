@@ -1,0 +1,14 @@
+<h3>Attributs</h3>
+<div *ngFor="let attr of attributes">
+  <strong>{{ attr.name }}:</strong> {{ attr.value }} ({{ attr.type }})
+  <button (click)="remove(attr.id)">❌</button>
+</div>
+
+<input [(ngModel)]="newAttr.name" placeholder="Nom" />
+<input [(ngModel)]="newAttr.value" placeholder="Valeur" />
+<select [(ngModel)]="newAttr.type">
+  <option value="STRING">Texte</option>
+  <option value="NUMBER">Nombre</option>
+  <option value="BOOLEAN">Oui/Non</option>
+</select>
+<button (click)="add()">Ajouter</button>

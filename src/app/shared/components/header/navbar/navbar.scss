@@ -1,0 +1,32 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .logo {
+      width: 28px;
+      height: 28px;
+    }
+
+    .brand {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+  }
+
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    a {
+      color: white;
+      font-weight: 500;
+    }
+  }
+}

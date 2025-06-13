@@ -1,0 +1,86 @@
+<div class="container mt-4">
+  <h2 class="mb-4">
+    @if (productId) {
+      Modifier un produit
+    } @else {
+      Créer un nouveau produit
+    }
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Nom -->
+    <div class="input-group mb-3">
+      <span class="input-group-text">Nom</span>
+      <input type="text" class="form-control" formControlName="name" [class.is-invalid]="form.controls.name.invalid && form.controls.name.touched">
+    </div>
+    @if (form.controls.name.invalid && form.controls.name.touched) {
+      <div class="text-danger mb-2">
+        Le nom est requis.
+      </div>
+    }
+
+    <!-- Slug -->
+    <div class="input-group mb-3">
+      <span class="input-group-text">Slug</span>
+      <input type="text" class="form-control" formControlName="slug">
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" rows="3" formControlName="description"></textarea>
+    </div>
+
+    <!-- Prix -->
+    <div class="input-group mb-3">
+      <span class="input-group-text">$</span>
+      <input type="number" class="form-control" formControlName="price" min="0" step="0.01">
+      <span class="input-group-text">CAD</span>
+    </div>
+
+    <!-- Catégorie existante -->
+    <div class="input-group mb-3">
+      <label class="input-group-text">Catégorie</label>
+      <select class="form-select" formControlName="categoryId">
+        @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">
+            {{ cat.name }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Ajouter une nouvelle catégorie -->
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Nouvelle catégorie" formControlName="newCategory" name="newCategory">
+      <button type="button" class="btn btn-outline-secondary" (click)="createCategory()">Ajouter</button>
+    </div>
+
+    <!-- Actif -->
+    <div class="form-check form-switch mb-3">
+      <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
+      <label class="form-check-label" for="activeSwitch">Produit actif</label>
+    </div>
+
+    <!-- Image principale -->
+    <div class="mb-3">
+      <label class="form-label">Image principale</label>
+      <input type="file" class="form-control" (change)="onImageSelected($event)">
+    </div>
+
+    @if (mainImageUrl()) {
+      <div class="mb-3">
+        <img [src]="mainImageUrl()" alt="Image" class="img-thumbnail" style="max-width: 200px;">
+      </div>
+    }
+
+    <!-- Bouton -->
+    <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">
+      @if (productId) {
+        Mettre à jour
+      } @else {
+        Créer
+      }
+    </button>
+  </form>
+</div>

@@ -1,0 +1,14 @@
+<h3>Images</h3>
+
+<div *ngFor="let image of images">
+  <img [src]="image.url" width="80" />
+  <span>Main : {{ image.isMain ? '✅' : '❌' }}</span>
+  <button (click)="remove(image.id)">🗑️</button>
+</div>
+
+<input [(ngModel)]="newImage.url" placeholder="URL de l'image" />
+<label>
+  Image principale :
+  <input type="checkbox" [(ngModel)]="newImage.isMain" />
+</label>
+<button (click)="add()">Ajouter</button>
