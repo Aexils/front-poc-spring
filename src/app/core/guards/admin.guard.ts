@@ -3,8 +3,8 @@ import { inject } from '@angular/core';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { User } from '../models/user.model'; // adapte le chemin
-import { UserRole } from '../models/user.model';
+import { User } from '../../shared/models/user.model'; // adapte le chemin
+import { UserRole } from '../../shared/models/user.model';
 
 export const adminGuard: CanActivateFn = async () => {
   const auth0 = inject(Auth0Service);

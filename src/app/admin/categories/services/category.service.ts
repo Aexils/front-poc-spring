@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {firstValueFrom, Observable} from 'rxjs';
-import {Category} from '../../products/models/category.model';
+import {Category} from '../../../shared/models/category.model';
 import {AuthService as Auth0Service} from '@auth0/auth0-angular';
 
 @Injectable({providedIn: 'root'})

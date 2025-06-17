@@ -1,0 +1,21 @@
+<h2 class="dashboard-title container">Tableau de bord</h2>
+
+<div class="dashboard-grid container">
+  <mat-card class="dashboard-card" (click)="redirectTo('admin/users')">
+    <mat-card-header>
+      <mat-card-title>👥 Nombre d'utilisateurs</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="metric">{{ numberOfUsers }}</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="dashboard-card" (click)="redirectTo('/admin/products')">
+    <mat-card-header>
+      <mat-card-title>📦 Produits en vente</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="metric">{{ numberOfProducts }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>

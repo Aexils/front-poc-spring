@@ -1,85 +1,175 @@
-<div class="container mt-4">
-  <h2 class="mb-4">
-    @if (productId) {
+<div class="container py-4 px-3">
+  <h2 class="mb-4 fw-bold fs-3 text-light">
+    @if (productSlug) {
       Modifier un produit
     } @else {
       Créer un nouveau produit
     }
   </h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <!-- Nom -->
-    <div class="input-group mb-3">
-      <span class="input-group-text">Nom</span>
-      <input type="text" class="form-control" formControlName="name" [class.is-invalid]="form.controls.name.invalid && form.controls.name.touched">
-    </div>
-    @if (form.controls.name.invalid && form.controls.name.touched) {
-      <div class="text-danger mb-2">
-        Le nom est requis.
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-dark p-4 rounded shadow-sm border border-secondary">
+    <!-- Informations générales -->
+    <fieldset class="mb-4 border border-secondary p-3 rounded">
+      <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary bg-dark">Informations générales</legend>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label text-light">Nom</label>
+          <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="name"
+                 placeholder="Nom du produit">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label text-light">Slug</label>
+          <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="slug" readonly>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label text-light">Description</label>
+          <textarea class="form-control bg-dark text-light border-secondary" rows="3" formControlName="description"
+                    placeholder="Description..."></textarea>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label text-light">Prix</label>
+          <div class="input-group">
+            <span class="input-group-text bg-secondary text-white border-0">$</span>
+            <input type="number" class="form-control bg-dark text-light border-secondary" formControlName="price"
+                   min="0" step="0.01">
+            <span class="input-group-text bg-secondary text-white border-0">CAD</span>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label text-light">Catégorie</label>
+          <select class="form-select bg-dark text-light border-secondary" formControlName="categoryId">
+            <option value="">Sélectionnez une catégorie</option>
+            @for (cat of categories(); track cat.id) {
+              <option [value]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-4 d-flex align-items-end">
+          <div class="input-group">
+            <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Nouvelle catégorie"
+                   formControlName="newCategory">
+            <button type="button" class="btn btn-outline-light" (click)="createCategory()">Ajouter</button>
+          </div>
+        </div>
       </div>
+    </fieldset>
+
+    <!-- Informations spécifiques -->
+    @if (form.getRawValue().attributes.length > 0) {
+      <fieldset class="mb-4 border border-secondary p-3 rounded">
+        <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary bg-dark">Informations spécifiques</legend>
+
+        <div class="row g-3" formArrayName="attributes">
+          @for (attr of attributeTemplates; let i = $index; track attr) {
+            <div class="col-md-6 col-lg-4" [formGroupName]="i">
+              <label class="form-label text-light">{{ attr.name }}</label>
+
+              @if (attr.type === 'text') {
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="value"
+                       placeholder="{{ attr.name }}">
+              }
+
+              @if (attr.type === 'number') {
+                <input type="number" class="form-control bg-dark text-light border-secondary" formControlName="value">
+              }
+
+              @if (attr.type === 'select') {
+                <select class="form-select bg-dark text-light border-secondary" formControlName="value">
+                  @for (option of attr.options ?? []; track option) {
+                    <option [value]="option">{{ option }}</option>
+                  }
+                </select>
+              }
+
+              @if (attr.type === 'boolean') {
+                <div class="form-check form-switch mt-2">
+                  <input class="form-check-input" type="checkbox" formControlName="value">
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </fieldset>
     }
 
-    <!-- Slug -->
-    <div class="input-group mb-3">
-      <span class="input-group-text">Slug</span>
-      <input type="text" class="form-control" formControlName="slug">
-    </div>
+    <fieldset class="mb-4 border border-secondary p-3 rounded">
+      <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary bg-dark">Variantes</legend>
 
-    <!-- Description -->
-    <div class="mb-3">
-      <label class="form-label">Description</label>
-      <textarea class="form-control" rows="3" formControlName="description"></textarea>
-    </div>
-
-    <!-- Prix -->
-    <div class="input-group mb-3">
-      <span class="input-group-text">$</span>
-      <input type="number" class="form-control" formControlName="price" min="0" step="0.01">
-      <span class="input-group-text">CAD</span>
-    </div>
-
-    <!-- Catégorie existante -->
-    <div class="input-group mb-3">
-      <label class="input-group-text">Catégorie</label>
-      <select class="form-select" formControlName="categoryId">
-        @for (cat of categories(); track cat.id) {
-          <option [value]="cat.id">
-            {{ cat.name }}
-          </option>
+      <div formArrayName="variants">
+        @for (variantGroup of variantsArray.controls; let i = $index; track variantGroup) {
+          <div [formGroupName]="i" class="row g-3 align-items-end mb-3">
+            <div class="col-md-4">
+              <label class="form-label text-light">Nom</label>
+              <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="variantName" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label text-light">Prix override</label>
+              <input type="number" class="form-control bg-dark text-light border-secondary" formControlName="priceOverride" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label text-light">Stock</label>
+              <input type="number" class="form-control bg-dark text-light border-secondary" formControlName="stock" />
+            </div>
+            <div class="col-md-1">
+              <div class="form-check form-switch mt-4">
+                <input type="checkbox" class="form-check-input" formControlName="active" />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-sm btn-danger mt-2" (click)="removeVariantFormGroup(i)">🗑</button>
+            </div>
+          </div>
         }
-      </select>
-    </div>
+      </div>
+      <button type="button" class="btn btn-outline-light" (click)="addVariantFormGroup()">➕ Ajouter une variante</button>
+    </fieldset>
 
-    <!-- Ajouter une nouvelle catégorie -->
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Nouvelle catégorie" formControlName="newCategory" name="newCategory">
-      <button type="button" class="btn btn-outline-secondary" (click)="createCategory()">Ajouter</button>
-    </div>
+    <!-- Images (upload dans le même formulaire) -->
+    <fieldset class="mb-4 border border-secondary p-3 rounded">
+      <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary bg-dark">Images</legend>
+
+      <input type="file" multiple class="form-control bg-dark text-light border-secondary mb-3"
+             (change)="onImageFilesSelected($event)"/>
+
+      @if (images.length > 0) {
+        <div class="d-flex flex-wrap gap-3">
+          @for (image of images; track $index) {
+            <div class="text-center">
+              <img [src]="image.isLocal ? image.url : `http://localhost:8080${image.url}`" class="img-thumbnail mb-1" style="max-width: 100px;"/>
+              <label class="form-check">
+                <input
+                  type="radio"
+                  name="mainImage"
+                  class="form-check-input"
+                  [checked]="images[$index].isMain"
+                  (change)="onMainImageChange($index)"
+                />
+                Principale
+              </label>
+              <button type="button" class="btn btn-sm btn-danger" (click)="removeImage($index, image)">🗑 Supprimer</button>
+            </div>
+          }
+        </div>
+      }
+    </fieldset>
 
     <!-- Actif -->
-    <div class="form-check form-switch mb-3">
+    <div class="form-check form-switch mb-4">
       <input class="form-check-input" type="checkbox" formControlName="active" id="activeSwitch">
-      <label class="form-check-label" for="activeSwitch">Produit actif</label>
+      <label class="form-check-label text-light" for="activeSwitch">Produit actif</label>
     </div>
-
-    <!-- Image principale -->
-    <div class="mb-3">
-      <label class="form-label">Image principale</label>
-      <input type="file" class="form-control" (change)="onImageSelected($event)">
-    </div>
-
-    @if (mainImageUrl()) {
-      <div class="mb-3">
-        <img [src]="mainImageUrl()" alt="Image" class="img-thumbnail" style="max-width: 200px;">
-      </div>
-    }
 
     <!-- Bouton -->
-    <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">
-      @if (productId) {
+    <button type="submit" class="btn btn-outline-light w-100 fw-semibold py-2" [disabled]="form.invalid">
+      @if (productSlug) {
         Mettre à jour
       } @else {
-        Créer
+        Créer le produit
       }
     </button>
   </form>

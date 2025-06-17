@@ -1,0 +1,36 @@
+<div class="row row-cols-1 row-cols-md-5 g-4">
+  @for (product of products; track product.id) {
+    <div class="col">
+      <div class="card">
+        <div class="d-flex justify-content-center align-items-center">
+          @for (image of product.images; track image.id; let i = $index) {
+            @if (image.isMain) {
+              <img [src]="`http://localhost:8080${image.url}`" class="card-img-top img-thumbnail" alt="main image">
+            }
+          }
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text description">{{ product.description }}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          @let lowestPrice = getLowestVariantPrice(product);
+
+          @if (lowestPrice !== null) {
+            <li class="list-group-item text-end">
+              <span class="text-danger fw-bold">{{ lowestPrice | currency: 'CAD' : 'symbol' : '.2-2' : 'fr-FR' }}</span>
+              <span class="text-muted text-decoration-line-through ms-2">{{ product.price | currency: 'CAD' : 'symbol' : '.2-2' : 'fr-FR' }}</span>
+            </li>
+          } @else {
+            <li class="list-group-item text-end">
+              {{ product.price | currency: 'CAD' : 'symbol' : '.2-2' : 'fr-FR' }}
+            </li>
+          }
+
+          <button class="btn btn-success my-2 mx-5 px-0 py-1" [routerLink]="`/product/${product.slug}`">Consulter
+          </button>
+        </ul>
+      </div>
+    </div>
+  }
+</div>

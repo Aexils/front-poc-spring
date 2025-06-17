@@ -1,0 +1,25 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* important si tu veux égaliser automatiquement via grid ou flex parent */
+
+  .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-text {
+    flex-grow: 1;
+    max-height: 6em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  .btn {
+    margin-top: auto;
+  }
+}

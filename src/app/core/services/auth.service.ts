@@ -2,7 +2,7 @@ import {AuthStore} from '../store/auth.store';
 import {Injectable} from '@angular/core';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import {firstValueFrom} from 'rxjs';
-import {User} from '../models/user.model';
+import {User} from '../../shared/models/user.model';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
@@ -25,6 +25,15 @@ export class AuthService {
     );
 
     this.store.setUser(user);
+  }
+
+  async getCurrentUser(): Promise<void> {
+    const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
+
+    const user = await firstValueFrom(this.http.get<User>('http://localhost:8080/auth/me', {
+      headers: { Authorization: `Bearer ${token}` }}))
+
+    this.store.setUser(user)
   }
 
   logout() {

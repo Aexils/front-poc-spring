@@ -1,0 +1,40 @@
+@if (product) {
+  <div class="container py-5">
+    <div class="row g-4 d-flex">
+      <!-- Image -->
+      <div class="col-md-4 text-center">
+        @for (image of product.images; track image) {
+          @if (image.isMain) {
+            @let src = 'http://localhost:8080' + image.url;
+            <img [src]="src" class="img-fluid rounded shadow-sm" alt="{{ product.name }}">
+          }
+        }
+      </div>
+
+      <!-- Infos -->
+      <div class="col-md-8 d-flex flex-column justify-content-between">
+        <div>
+          <h2 class="fw-bold">{{ product.name }}</h2>
+          <p class="fs-5 fw-semibold">
+            {{ product.price | currency:'CAD':'symbol':'.2-2':'fr-CA' }}
+          </p>
+
+          <p>{{ product.description }}</p>
+
+          <!-- Attributs dynamiques -->
+          @if (product.attributes.length > 0) {
+            <h3 class="mt-4">Détails :</h3>
+            <ul class="list-unstyled row">
+              @for (attr of product.attributes; track attr) {
+                <li class="col-6">
+                  <strong>{{ attr.name }}:</strong> {{ attr.value }}
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+      <button class="btn btn-success"><i class="bi-basket"></i> Ajouter au panier</button>
+    </div>
+  </div>
+}

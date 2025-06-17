@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg bg-dark text-white py-2 mb-3">
+  <div class="container-fluid px-4">
+
+    <!-- Logo -->
+    <a class="navbar-brand text-white fw-bold" routerLink="/">
+      <span style="font-size: 1.5rem; background: linear-gradient(to right, #ccc333, #90f); -webkit-background-clip: text; color: transparent;">
+        SHOP
+      </span>
+    </a>
+
+    <!-- Search + nav -->
+    <div class="collapse navbar-collapse" id="navbarSearch">
+
+      <!-- Search form with category -->
+      <form class="d-flex flex-grow-1 mx-3" role="search">
+        <div class="input-group w-100">
+          <!-- Dropdown for category -->
+          <button class="btn btn-light dropdown-toggle" type="button" [matMenuTriggerFor]="menuCategories">
+            {{ categorySelected }}
+          </button>
+          <mat-menu #menuCategories="matMenu">
+              @for (category of categories(); track category.id) {
+                <a mat-menu-item class="dropdown-item" (click)="selectCategory(category.name)">{{category.name}}</a>
+              }
+          </mat-menu>
+
+          <!-- Input -->
+          <input class="form-control" type="search" placeholder="Rechercher" aria-label="Search" />
+
+          <!-- Search icon -->
+          <button class="btn btn-light" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Right links -->
+      <ul class="navbar-nav">
+        <li class="nav-item mx-3"><a class="nav-link text-white" href="#"><i class="bi bi-basket"></i> Panier</a></li>
+        @if (user()) {
+          <li class="nav-item align-content-center" mat-icon-button [matMenuTriggerFor]="menu">
+            <img class="avatar" [src]="user()?.picture" width="32" height="32" style="border-radius: 50%" alt=""/>
+          </li>
+
+          <mat-menu #menu="matMenu">
+            <a mat-menu-item disabled>{{user()?.email}}</a>
+            @if (user()?.role == UserRole.ADMIN) {
+              <a mat-menu-item routerLink="/admin">Administration</a>
+            }
+            <a mat-menu-item (click)="logout()">Déconnexion</a>
+          </mat-menu>
+        } @else {
+          <li class="nav-item"><a class="nav-link text-white" href="#" (click)="login()">Connexion</a></li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>
