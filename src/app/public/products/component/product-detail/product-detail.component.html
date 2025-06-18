@@ -15,9 +15,21 @@
       <div class="col-md-8 d-flex flex-column justify-content-between">
         <div>
           <h2 class="fw-bold">{{ product.name }}</h2>
-          <p class="fs-5 fw-semibold">
-            {{ product.price | currency:'CAD':'symbol':'.2-2':'fr-CA' }}
-          </p>
+
+          @let lowestPrice = getLowestVariantPrice(product);
+
+          @if (lowestPrice !== null) {
+            <span class="fs-5 fw-semibold text-danger fw-bold">
+                {{ lowestPrice | currency:'CAD':'symbol':'.2-2':'fr-CA' }}
+              </span>
+            <span class="fs-5 fw-semibold text-decoration-line-through ms-2">
+                {{ product.price | currency:'CAD':'symbol':'.2-2':'fr-CA' }}
+              </span>
+          } @else {
+            <p class="fs-5 fw-semibold">
+              {{ product.price | currency:'CAD':'symbol':'.2-2':'fr-CA' }}
+            </p>
+          }
 
           <p>{{ product.description }}</p>
 
@@ -32,9 +44,48 @@
               }
             </ul>
           }
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="">
+            <fieldset class="mb-4 border border-secondary p-3 rounded">
+              <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary">Ajouter au panier</legend>
+              <div class="row g-3 align-items-end">
+                <div class="col-md-4 m-0">
+                  <label for="variant">Variant</label>
+                  <select id="variant"
+                          class="form-select bg-dark text-light border-secondary"
+                          formControlName="variantId"
+                          (change)="onVariantChange()">
+                    @for (variant of product.variants; track variant) {
+                      <option [value]="variant.id">
+                        {{ variant.variantName }}
+                      </option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-md-3 m-0">
+                  <label>Prix</label>
+                  <p class="form-control bg-dark text-light border-secondary m-0">
+                    {{ selectedVariant?.priceOverride | currency:'CAD':'symbol':'.2-2':'fr-CA' }}
+                  </p>
+                </div>
+
+                <div class="col-md-3 m-0">
+                  <label for="quantity">Quantité</label>
+                  <input id="quantity" type="number" min="1" class="form-control bg-dark text-light border-secondary"
+                         formControlName="quantity"/>
+                </div>
+
+                <div class="col-md-2 m-0">
+                  <button type="submit" class="btn btn-success w-100">
+                    Ajouter <i class="bi bi-cart"></i>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
-      <button class="btn btn-success"><i class="bi-basket"></i> Ajouter au panier</button>
     </div>
   </div>
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {
   Product,
@@ -7,16 +7,14 @@ import {
   ProductImage,
   ProductVariant
 } from '../../../shared/models/product.model';
-import {firstValueFrom, map, Observable} from 'rxjs';
+import {firstValueFrom, Observable} from 'rxjs';
 import {AuthService as Auth0Service} from '@auth0/auth0-angular';
-import {AuthStore} from '../../../core/store/auth.store';
 
 @Injectable({providedIn: 'root'})
 export class ProductService {
   private readonly baseUrl = 'http://localhost:8080/admin/products';
-
-  constructor(private auth0: Auth0Service, private store: AuthStore, private http: HttpClient) {
-  }
+  private auth0 = inject(Auth0Service)
+  private http = inject(HttpClient)
 
   // Products
   async getAll(): Promise<Product[]> {

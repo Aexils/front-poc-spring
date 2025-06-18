@@ -34,7 +34,7 @@ export interface ProductVariant {
   priceOverride: number;
   stock: number;
   active: boolean;
-  productId: string;
+  product: Product
 }
 
 export interface ProductCreatePayload {
@@ -60,5 +60,5 @@ export interface ProductDTO {
   categoryName: string,
   attributes: { name: string; value: string; type: string }[];
   images: { url: string; isMain: boolean; }[];
-  variants: { variantName: string; priceOverride: string; stock: string; active: boolean; }[];
+  variants: ProductVariant[];
 }
