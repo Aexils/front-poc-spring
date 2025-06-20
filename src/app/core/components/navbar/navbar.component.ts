@@ -66,25 +66,32 @@ export class NavbarComponent implements OnInit {
     this.categorySelected = category
   }
 
-  async ngOnInit(): Promise<void> {
-    this.cartStore.clearCartItemsQuantity()
-    const cart = await this.cartService.getOrCreateCartForUser()
-    for (const item of cart.items) {
-      this.quantity += item.quantity
-    }
-    this.cartStore.setCartItemsQuantity(this.quantity)
-    this.cartStore.setCart(cart)
+  ngOnInit(): void {
+    setTimeout(() => {
+      const cart = this.cartStore.cart();
+      console.log(cart);
+      if (cart) {
+        let q = 0;
+        for (const item of cart.items) {
+          q += item.quantity;
+        }
+        this.cartStore.setCartItemsQuantity(q);
+      }
+    }, 500); // pour tester si le `getCurrentUser()` finit après ton ngOnInit
   }
 
   async deleteCartItem(cartItemId: string) {
     await this.cartService.deleteItemCart(cartItemId)
     this.cartStore.clearCartItemsQuantity()
-    const cart = await this.cartService.getOrCreateCartForUser()
-    for (const item of cart.items) {
-      this.quantity += item.quantity
+    await this.cartService.getOrCreateCartForUser()
+    const cart = this.cartStore.cart()
+    if (cart) {
+      for (const item of cart.items) {
+        this.quantity += item.quantity
+      }
+      this.cartStore.setCartItemsQuantity(this.quantity)
+      this.cartStore.clearCart()
+      this.cartStore.setCart(cart)
     }
-    this.cartStore.setCartItemsQuantity(this.quantity)
-    this.cartStore.clearCart()
-    this.cartStore.setCart(cart)
   }
 }

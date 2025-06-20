@@ -8,16 +8,16 @@ import {AuthService as Auth0Service} from '@auth0/auth0-angular';
 export class CategoryService {
   private http = inject(HttpClient);
   private auth0 = inject(Auth0Service)
-  private API = 'http://localhost:8080/admin/categories';
+  private API = 'http://localhost:8080';
 
-  getAll(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.API);
+  async getAll(): Promise<Category[]> {
+    return await firstValueFrom(this.http.get<Category[]>(`${this.API}/categories`));
   }
 
   async create(dto: Partial<Category>): Promise<Observable<Category>> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
-    return this.http.post<Category>(this.API, {
+    return this.http.post<Category>(`${this.API}/admin/categories`, {
         name: dto.name,
         slug: this.slugify(dto.name || ''),
         parentId: dto.parentId ?? null

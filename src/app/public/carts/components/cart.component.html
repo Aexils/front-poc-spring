@@ -1,0 +1,45 @@
+<div class="container py-4">
+  <h2 class="mb-4">🛒 Votre panier</h2>
+
+  @for (category of groupedItems | keyvalue; track category.key) {
+    <h4 class="mt-4 border-bottom pb-2 text-primary">{{ category.key }}</h4>
+
+    @for (item of category.value; track item.id) {
+      <div class="card bg-dark text-light mb-3 shadow-sm border-0">
+        <div class="row g-0 align-items-center">
+          <div class="col-auto">
+            @for (image of item.product.images; track image.id) {
+              @if (image.isMain) {
+                @let src = 'http://localhost:8080' + image.url;
+                <img
+                  [src]="src"
+                  class="img-fluid rounded-start m-2"
+                  alt="{{ item.product.name }}"
+                  style="width: 80px; height: auto"
+                />
+              }
+            }
+          </div>
+
+          <div class="col">
+            <div class="card-body py-3">
+              <h5 class="card-title m-0">{{ item.product.name }}</h5>
+              <p class="card-text small">
+                {{ item.variantName }} – Quantité : {{ item.quantity }}
+              </p>
+            </div>
+          </div>
+
+          <div class="col-auto pe-4">
+            <strong class="text-end text-success">
+              {{ item.price | currency:'CAD':'symbol':'.2-2':'fr-CA' }}
+            </strong>
+          </div>
+        </div>
+      </div>
+    }
+  }
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-success w-25">Continuer</button>
+  </div>
+</div>

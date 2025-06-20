@@ -1,0 +1,24 @@
+@if (user()) {
+  <div class="container-fluid">
+    <div class="row">
+      <aside class="col-md-2 bg-dark text-white p-3 min-vh-100">
+        <h5 class="mb-4">Mon Profil</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2">
+            <a class="nav-link text-light" routerLink="/profile" routerLinkActive="fw-bold text-primary">Dashboard</a>
+          </li>
+          <li class="nav-item mb-2">
+            <a class="nav-link text-light" routerLink="/profile/user" routerLinkActive="fw-bold text-primary">Informations Personnelles</a>
+          </li>
+          <!-- autres liens ici -->
+        </ul>
+      </aside>
+
+      <!-- Content area -->
+      <main class="col-md-9 p-4">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+}
+

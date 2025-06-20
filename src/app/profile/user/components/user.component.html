@@ -1,0 +1,115 @@
+<div class="container">
+  <h2>Informations personnelles</h2>
+  <div class="container py-4 px-3">
+    <h2 class="mb-4 fw-bold fs-3 text-light">
+      @if (customer) {
+        Modifier votre profil
+      } @else {
+        Créer un profil utilisateur
+      }
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-dark p-4 rounded shadow-sm border border-secondary">
+      <!-- Informations personnelles -->
+      <fieldset class="mb-4 border border-secondary p-3 rounded">
+        <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary bg-dark">Informations personnelles</legend>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label text-light">Prénom</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="firstName" placeholder="Prénom">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-light">Nom</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="lastName" placeholder="Nom">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-light">Téléphone</label>
+            <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="phone" placeholder="Téléphone">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Adresses de facturation -->
+      <fieldset class="mb-4 border border-secondary p-3 rounded">
+        <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary bg-dark">Adresse(s) de facturation</legend>
+
+        <div formArrayName="billingAddresses">
+          @for (group of billingAddresses.controls; let i = $index; track i) {
+            <div [formGroupName]="i" class="row g-3 mb-3">
+              <div class="col-md-4">
+                <label class="form-label text-light">Rue</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="street" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label text-light">Ville</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="city" />
+              </div>
+              <div class="col-md-2">
+                <label class="form-label text-light">Province</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="province" />
+              </div>
+              <div class="col-md-2">
+                <label class="form-label text-light">Code postal</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="postalCode" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label text-light">Pays</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="country" />
+              </div>
+              <div class="col-md-1 d-flex align-items-end">
+                <button type="button" class="btn btn-sm btn-danger" (click)="removeBillingAddress(i)">🗑</button>
+              </div>
+            </div>
+          }
+          <button type="button" class="btn btn-outline-light" (click)="addBillingAddress()">➕ Ajouter une adresse</button>
+        </div>
+      </fieldset>
+
+      <!-- Adresses de livraison -->
+      <fieldset class="mb-4 border border-secondary p-3 rounded">
+        <legend class="float-none w-auto px-2 fs-6 fw-semibold text-primary bg-dark">Adresse(s) de livraison</legend>
+
+        <div formArrayName="shippingAddresses">
+          @for (group of shippingAddresses.controls; let i = $index; track i) {
+            <div [formGroupName]="i" class="row g-3 mb-3">
+              <div class="col-md-4">
+                <label class="form-label text-light">Rue</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="street" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label text-light">Ville</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="city" />
+              </div>
+              <div class="col-md-2">
+                <label class="form-label text-light">Province</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="province" />
+              </div>
+              <div class="col-md-2">
+                <label class="form-label text-light">Code postal</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="postalCode" />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label text-light">Pays</label>
+                <input type="text" class="form-control bg-dark text-light border-secondary" formControlName="country" />
+              </div>
+              <div class="col-md-1 d-flex align-items-end">
+                <button type="button" class="btn btn-sm btn-danger" (click)="removeShippingAddress(i)">🗑</button>
+              </div>
+            </div>
+          }
+          <button type="button" class="btn btn-outline-light" (click)="addShippingAddress()">➕ Ajouter une adresse</button>
+        </div>
+      </fieldset>
+
+      <!-- Soumission -->
+      <button type="submit" class="btn btn-outline-light w-100 fw-semibold py-2" [disabled]="form.invalid">
+        @if (customer) {
+          Mettre à jour le profil
+        } @else {
+          Créer le profil
+        }
+      </button>
+    </form>
+  </div>
+</div>

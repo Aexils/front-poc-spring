@@ -7,10 +7,15 @@ import {usersRoutes} from './admin/users/users.routes';
 import {RegisterRedirectComponent} from './core/components/register-redirect/register-redirect.component';
 import {HomePageComponent} from './public/home/components/home-page/home-page.component';
 import {ProductDetailComponent} from './public/products/component/product-detail/product-detail.component';
+import {CartComponent} from './public/carts/components/cart.component';
+import {profileRoutes} from './profile/profile.routes';
 
 export const routes: Routes = [
   {
     path: '', component: HomePageComponent
+  },
+  {
+    path: 'cart', component: CartComponent
   },
   {
     path: 'product/:slug', component: ProductDetailComponent
@@ -26,8 +31,14 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     children: [
       { path: '', component: DashboardComponent },
-      { path: 'users', children: usersRoutes },
+      { path: 'profile', children: usersRoutes },
       { path: 'products', children: productsRoutes},
+    ]
+  },
+  {
+    path: 'profile',
+    children: [
+      { path: '', children: profileRoutes}
     ]
   }
 ];

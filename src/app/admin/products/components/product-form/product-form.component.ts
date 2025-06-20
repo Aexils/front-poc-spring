@@ -61,7 +61,7 @@ export class ProductFormComponent implements OnInit {
   async ngOnInit() {
     this.productSlug = this.route.snapshot.paramMap.get('slug');
 
-    const cats = await firstValueFrom(this.categoryService.getAll());
+    const cats = await this.categoryService.getAll();
     this.categories.set(cats);
 
     this.form.get('categoryId')!.valueChanges.subscribe((categoryId: string) => {

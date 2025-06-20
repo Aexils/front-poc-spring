@@ -1,3 +1,6 @@
+import {Customer} from './customer.model';
+import {Cart} from './cart.model';
+
 export interface User {
   id: string;
   email: string;
@@ -5,6 +8,8 @@ export interface User {
   picture: string;
   role: UserRole;
   active: boolean;
+  customer: Customer;
+  cart: Cart;
 }
 
 export enum UserRole {

@@ -5,7 +5,7 @@ import {Cart, CartItem} from '../../shared/models/cart.model';
 import {HttpClient} from '@angular/common/http';
 import {CartStore} from '../store/cart.store';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class CartService {
   private auth0 = inject(Auth0Service)
   private http = inject(HttpClient);
@@ -13,18 +13,32 @@ export class CartService {
 
   private readonly baseUrl = 'http://localhost:8080/cart';
 
-  async getOrCreateCartForUser(): Promise<Cart> {
-    const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
+  async getOrCreateCartForUser(): Promise<void> {
+    let token: string | null = null;
 
-    return await firstValueFrom(this.http.get<Cart>(this.baseUrl,
-      {
+    try {
+      token = await firstValueFrom(this.auth0.getAccessTokenSilently());
+    } catch {
+      // Pas connecté ou token expiré : on ne fait rien
+      return;
+    }
+
+    if (!token) return;
+
+    this.cartStore.clearCartItemsQuantity();
+
+    const cart = await firstValueFrom(
+      this.http.get<Cart>(this.baseUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    ));
+          'Content-Type': 'application/json',
+        },
+      })
+    );
+
+    this.cartStore.setCart(cart);
   }
+
 
   async addItemToCart(cartItem: Partial<CartItem>): Promise<Cart> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());

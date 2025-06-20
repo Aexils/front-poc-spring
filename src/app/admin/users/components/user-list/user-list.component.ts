@@ -7,7 +7,7 @@ import {User} from '../../../../shared/models/user.model';
 import {UserFormComponent} from '../user-form/user-form.component';
 
 @Component({
-  selector: 'app-components-users',
+  selector: 'app-components-profile',
   standalone: true,
   styleUrl: 'user-list.component.scss',
   templateUrl: 'user-list.component.html',

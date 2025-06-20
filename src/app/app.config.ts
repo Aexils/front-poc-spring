@@ -1,6 +1,6 @@
 import {
   APP_INITIALIZER,
-  ApplicationConfig,
+  ApplicationConfig, inject, provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection
 } from '@angular/core';
@@ -9,9 +9,14 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import {provideAuth0} from '@auth0/auth0-angular';
 import {provideHttpClient} from '@angular/common/http';
+import {AuthService} from './core/services/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAppInitializer( async () => {
+      const authService = inject(AuthService)
+      return authService.getCurrentUser()
+    }),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),

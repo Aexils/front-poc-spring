@@ -65,7 +65,7 @@ export class ProductDetailComponent implements OnInit{
         variantId: this.form.value.variantId
       };
 
-      this.cart = await this.cartService.getOrCreateCartForUser()
+      await this.cartService.getOrCreateCartForUser()
       await this.cartService.addItemToCart(dto)
     }
   }

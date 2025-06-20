@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import {NavbarComponent} from './core/components/navbar/navbar.component';
 import {CategoryService} from './core/services/category.service';
 import {AuthService} from './core/services/auth.service';
+import {CartService} from './core/services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +12,6 @@ import {AuthService} from './core/services/auth.service';
   styleUrl: './app.scss'
 })
 export class App {
-  authService = inject(AuthService)
-  categoryService = inject(CategoryService)
   constructor() {
-    this.authService.getCurrentUser()
-    this.categoryService.getAll()
   }
 }

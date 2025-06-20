@@ -4,11 +4,14 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import {firstValueFrom} from 'rxjs';
 import {User} from '../../shared/models/user.model';
 import {HttpClient} from '@angular/common/http';
+import {CartService} from './cart.service';
+import {CartStore} from '../store/cart.store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth0 = inject(Auth0Service)
   private store = inject(AuthStore)
+  private cartStore = inject(CartStore)
   private http = inject(HttpClient)
 
   async register() {
@@ -30,11 +33,29 @@ export class AuthService {
   }
 
   async getCurrentUser(): Promise<void> {
-    const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
+    let token: string | null = null;
+
+    try {
+      token = await firstValueFrom(this.auth0.getAccessTokenSilently());
+    } catch {
+      return;
+    }
+
+    if (!token) return;
 
     const user = await firstValueFrom(this.http.get<User>('http://localhost:8080/auth/me', {
       headers: { Authorization: `Bearer ${token}` }}))
 
-    this.store.setUser(user)
+    this.store.setUser({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      picture: user.picture,
+      role: user.role,
+      active: user.active
+    });
+
+    this.cartStore.setCart(user.cart);
+    this.store.setCustomer(user.customer);
   }
 }

@@ -8,7 +8,7 @@ import {CategoryStore} from '../store/category.store';
 export class CategoryService {
   private http = inject(HttpClient)
   private categoryStore = inject(CategoryStore)
-  private API = 'http://localhost:8080/admin/categories'
+  private API = 'http://localhost:8080/categories'
 
   async getAll(): Promise<void> {
     const categories = await firstValueFrom(this.http.get<Category[]>(this.API))
