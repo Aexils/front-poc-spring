@@ -4,6 +4,7 @@ import {firstValueFrom} from 'rxjs';
 import {Cart, CartItem} from '../../shared/models/cart.model';
 import {HttpClient} from '@angular/common/http';
 import {CartStore} from '../store/cart.store';
+import {environment} from '../../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class CartService {
@@ -11,7 +12,7 @@ export class CartService {
   private http = inject(HttpClient);
   private cartStore = inject(CartStore)
 
-  private readonly baseUrl = 'http://localhost:8080/cart';
+  private readonly baseUrl = `${environment.apiUrl}/cart`;
 
   async getOrCreateCartForUser(): Promise<void> {
     let token: string | null = null;

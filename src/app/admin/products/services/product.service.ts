@@ -9,23 +9,23 @@ import {
 } from '../../../shared/models/product.model';
 import {firstValueFrom, Observable} from 'rxjs';
 import {AuthService as Auth0Service} from '@auth0/auth0-angular';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class ProductService {
-  private readonly baseUrl = 'http://localhost:8080';
   private auth0 = inject(Auth0Service)
   private http = inject(HttpClient)
 
   // Products
   async getAll(): Promise<Product[]> {
-    return await firstValueFrom(this.http.get<Product[]>(`${this.baseUrl}/products`));
+    return await firstValueFrom(this.http.get<Product[]>(`${environment.apiUrl}/products`));
   }
 
   async getNumberOfProducts(): Promise<number> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
     return await firstValueFrom(
-      this.http.get<any>(`${this.baseUrl}/products/size`, {
+      this.http.get<any>(`${environment.apiUrl}/products/size`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -34,14 +34,14 @@ export class ProductService {
   }
 
   async getOne(slug: string): Promise<ProductDTO> {
-    return await firstValueFrom(this.http.get<ProductDTO>(`${this.baseUrl}/products/slug/${slug}`));
+    return await firstValueFrom(this.http.get<ProductDTO>(`${environment.apiUrl}/products/slug/${slug}`));
   }
 
   async create(product: Partial<ProductCreatePayload>): Promise<Observable<Product>> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
 
-    return this.http.post<Product>(`${this.baseUrl}/admin/products`, product,
+    return this.http.post<Product>(`${environment.apiUrl}/admin/products`, product,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ export class ProductService {
   async update(id: string, product: Partial<ProductCreatePayload>): Promise<Observable<Product>> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
-    return this.http.put<Product>(`${this.baseUrl}/admin/products${id}`, product,
+    return this.http.put<Product>(`${environment.apiUrl}/admin/products/${id}`, product,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ export class ProductService {
   async delete(id: string): Promise<Observable<Product>> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
-    return this.http.delete<Product>(`${this.baseUrl}/admin/products${id}`,
+    return this.http.delete<Product>(`${environment.apiUrl}/admin/products/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -78,20 +78,20 @@ export class ProductService {
 
   // Attributes
   getAttributes(productId: string): Observable<ProductAttribute[]> {
-    return this.http.get<ProductAttribute[]>(`${this.baseUrl}/products/${productId}/attributes`);
+    return this.http.get<ProductAttribute[]>(`${environment.apiUrl}/products/${productId}/attributes`);
   }
 
   addAttribute(productId: string, attr: Partial<ProductAttribute>): Observable<ProductAttribute> {
-    return this.http.post<ProductAttribute>(`${this.baseUrl}/admin/products/${productId}/attributes`, attr);
+    return this.http.post<ProductAttribute>(`${environment.apiUrl}/admin/products/${productId}/attributes`, attr);
   }
 
   deleteAttribute(attrId: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/admin/products/attributes/${attrId}`);
+    return this.http.delete<void>(`${environment.apiUrl}/admin/products/attributes/${attrId}`);
   }
 
   // Images
   getImages(productId: string): Observable<ProductImage[]> {
-    return this.http.get<ProductImage[]>(`${this.baseUrl}/${productId}/images`);
+    return this.http.get<ProductImage[]>(`${environment.apiUrl}/${productId}/images`);
   }
 
   addImage(productId: string, file: File, isMain: boolean): Observable<any> {
@@ -99,13 +99,13 @@ export class ProductService {
     formData.append('file', file);
     formData.append('isMain', String(isMain));
 
-    return this.http.post(`${this.baseUrl}/admin/products/${productId}/images`, formData);
+    return this.http.post(`${environment.apiUrl}/admin/products/${productId}/images`, formData);
   }
 
   async deleteImage(imageId: string | undefined): Promise<any> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
-    return await firstValueFrom(this.http.delete(`${this.baseUrl}/admin/products/images/${imageId}`,
+    return await firstValueFrom(this.http.delete(`${environment.apiUrl}/admin/products/images/${imageId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -117,7 +117,7 @@ export class ProductService {
   async setMainImage(productId: string, imageId: string): Promise<void> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
-    return await firstValueFrom(this.http.put<void>(`${this.baseUrl}/admin/products/${productId}/images/${imageId}/main`, {},
+    return await firstValueFrom(this.http.put<void>(`${environment.apiUrl}/admin/products/${productId}/images/${imageId}/main`, {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -128,14 +128,14 @@ export class ProductService {
 
   // Variants
   getVariants(productId: string): Observable<ProductVariant[]> {
-    return this.http.get<ProductVariant[]>(`${this.baseUrl}/products/${productId}/variants`);
+    return this.http.get<ProductVariant[]>(`${environment.apiUrl}/products/${productId}/variants`);
   }
 
   addVariant(productId: string, variant: Partial<ProductVariant>): Observable<ProductVariant> {
-    return this.http.post<ProductVariant>(`${this.baseUrl}/admin/products/${productId}/variants`, variant);
+    return this.http.post<ProductVariant>(`${environment.apiUrl}/admin/products/${productId}/variants`, variant);
   }
 
   deleteVariant(productId: string, variantId: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/admin/products/${productId}/variants/${variantId}`);
+    return this.http.delete<void>(`${environment.apiUrl}/admin/products/${productId}/variants/${variantId}`);
   }
 }

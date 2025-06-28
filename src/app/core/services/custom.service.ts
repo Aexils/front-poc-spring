@@ -3,12 +3,12 @@ import {inject, Injectable} from '@angular/core';
 import {Customer} from '../../shared/models/customer.model';
 import {firstValueFrom, Observable} from 'rxjs';
 import {AuthService as Auth0service} from '@auth0/auth0-angular';
+import {environment} from '../../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class CustomerService {
   private http = inject(HttpClient);
   private auth0 = inject(Auth0service)
-  private baseUrl = 'http://localhost:8080/customer'; // adapte si besoin
 
   async updateCustomer(customer: Customer): Promise<void> {
     let token: string | null = null;
@@ -20,7 +20,7 @@ export class CustomerService {
     }
 
     if (!token) return;
-    return await firstValueFrom(this.http.put<void>(this.baseUrl,
+    return await firstValueFrom(this.http.put<void>(`${environment.apiUrl}/customer`,
       customer,
       {
         headers: {

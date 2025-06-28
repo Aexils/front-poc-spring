@@ -20,7 +20,7 @@
           <div class="col-auto">
             @for (image of item.product.images; track image.id) {
               @if (image.isMain) {
-                @let src = 'http://localhost:8080' + image.url;
+                @let src = `${environment.apiUrl}${image.url}`;
                 <img
                   [src]="src"
                   class="img-fluid rounded-start m-2"

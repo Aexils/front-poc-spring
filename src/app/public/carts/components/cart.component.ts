@@ -4,6 +4,7 @@ import {CartStore} from '../../../core/store/cart.store';
 import {CartItem} from '../../../shared/models/cart.model';
 import {CurrencyPipe, KeyValuePipe} from '@angular/common';
 import {AuthStore} from '../../../core/store/auth.store';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-public-carts',
@@ -38,6 +39,8 @@ export class CartComponent implements OnInit {
       }
     }
   }
+
+  protected readonly environment = environment;
 }
 
 

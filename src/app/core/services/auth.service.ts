@@ -4,8 +4,8 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import {firstValueFrom} from 'rxjs';
 import {User} from '../../shared/models/user.model';
 import {HttpClient} from '@angular/common/http';
-import {CartService} from './cart.service';
 import {CartStore} from '../store/cart.store';
+import {environment} from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
     if (!token) throw new Error('No ID token received');
 
     const user = await firstValueFrom(
-      this.http.post<User>('http://localhost:8080/auth/me', null, {
+      this.http.post<User>(`${environment.apiUrl}/auth/me`, null, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -43,7 +43,7 @@ export class AuthService {
 
     if (!token) return;
 
-    const user = await firstValueFrom(this.http.get<User>('http://localhost:8080/auth/me', {
+    const user = await firstValueFrom(this.http.get<User>(`${environment.apiUrl}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }}))
 
     this.store.setUser({

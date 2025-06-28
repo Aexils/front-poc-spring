@@ -140,7 +140,7 @@
         <div class="d-flex flex-wrap gap-3">
           @for (image of images; track $index) {
             <div class="text-center">
-              <img [src]="image.isLocal ? image.url : `http://localhost:8080${image.url}`" class="img-thumbnail mb-1" style="max-width: 100px;"/>
+              <img [src]="image.isLocal ? image.url : `${environment.apiUrl}${image.url}`" class="img-thumbnail mb-1" style="max-width: 100px;"/>
               <label class="form-check">
                 <input
                   type="radio"

@@ -3,21 +3,21 @@ import {HttpClient} from '@angular/common/http';
 import {firstValueFrom, Observable} from 'rxjs';
 import {Category} from '../../../shared/models/category.model';
 import {AuthService as Auth0Service} from '@auth0/auth0-angular';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class CategoryService {
   private http = inject(HttpClient);
   private auth0 = inject(Auth0Service)
-  private API = 'http://localhost:8080';
 
   async getAll(): Promise<Category[]> {
-    return await firstValueFrom(this.http.get<Category[]>(`${this.API}/categories`));
+    return await firstValueFrom(this.http.get<Category[]>(`${environment.apiUrl}/categories`));
   }
 
   async create(dto: Partial<Category>): Promise<Observable<Category>> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
-    return this.http.post<Category>(`${this.API}/admin/categories`, {
+    return this.http.post<Category>(`${environment.apiUrl}/admin/categories`, {
         name: dto.name,
         slug: this.slugify(dto.name || ''),
         parentId: dto.parentId ?? null

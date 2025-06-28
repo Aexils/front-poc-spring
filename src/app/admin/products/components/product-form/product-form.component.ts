@@ -16,6 +16,7 @@ import {
 } from '../../../../shared/models/product.model';
 import {CommonModule} from '@angular/common';
 import {ToastService} from '../../../../core/services/toast.service';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-products-form',
@@ -283,4 +284,5 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
+  protected readonly environment = environment;
 }

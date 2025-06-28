@@ -8,6 +8,7 @@ import {CartService} from '../../../../core/services/cart.service';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthStore} from '../../../../core/store/auth.store';
 import {ToastService} from '../../../../core/services/toast.service';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-product-detail',
@@ -81,4 +82,5 @@ export class ProductDetailComponent implements OnInit{
     this.selectedVariant = this.product.variants.find(v => v.id === variantId);
   }
 
+  protected readonly environment = environment;
 }

@@ -1,20 +1,22 @@
-import {AuthStore} from '../../../core/store/auth.store';
 import {inject, Injectable} from '@angular/core';
 import {AuthService as Auth0Service} from '@auth0/auth0-angular';
 import {firstValueFrom} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../../shared/models/user.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   auth0 = inject(Auth0Service);
   http = inject(HttpClient);
 
+
+
   async getNumberOfUsers(): Promise<number> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
     return await firstValueFrom(
-      this.http.get<any>('http://localhost:8080/users/size', {
+      this.http.get<any>(`${environment.apiUrl}/users/size`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -26,7 +28,7 @@ export class UserService {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
     return await firstValueFrom(
-      this.http.get<User[]>('http://localhost:8080/users', {
+      this.http.get<User[]>(`${environment.apiUrl}/users`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -39,7 +41,7 @@ export class UserService {
 
     return await firstValueFrom(
       this.http.put<string>(
-        'http://localhost:8080/user',
+        `${environment.apiUrl}/user`,
         user,
         {
           headers: {

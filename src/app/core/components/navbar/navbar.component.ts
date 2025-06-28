@@ -12,6 +12,7 @@ import {CategoryStore} from '../../store/category.store';
 import {CartService} from '../../services/cart.service';
 import {CartStore} from '../../store/cart.store';
 import {ToastService} from '../../services/toast.service';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -87,4 +88,6 @@ export class NavbarComponent implements OnInit {
     this.cartStore.removeItem(cartItemId);
     this.toastService.show('Produit supprimé du panier', 'success')
   }
+
+  protected readonly environment = environment;
 }

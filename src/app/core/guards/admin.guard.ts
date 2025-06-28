@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { User } from '../../shared/models/user.model'; // adapte le chemin
 import { UserRole } from '../../shared/models/user.model';
+import {environment} from '../../../environments/environment';
 
 export const adminGuard: CanActivateFn = async () => {
   const auth0 = inject(Auth0Service);
@@ -15,7 +16,7 @@ export const adminGuard: CanActivateFn = async () => {
     const token = await firstValueFrom(auth0.getAccessTokenSilently());
 
     const user = await firstValueFrom(
-      http.get<User>('http://localhost:8080/auth/me', {
+      http.get<User>(`${environment.apiUrl}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

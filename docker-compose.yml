@@ -1,0 +1,14 @@
+services:
+  frontend:
+    container_name: frontend
+    build: .
+    ports:
+      - "4200:80"
+    restart: always
+    networks:
+      - ecommerce
+
+networks:
+  ecommerce:
+    external: true
+    name: ecommerce

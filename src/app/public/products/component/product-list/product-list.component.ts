@@ -3,6 +3,7 @@ import {ProductService} from '../../../../admin/products/services/product.servic
 import {Product} from '../../../../shared/models/product.model';
 import {CurrencyPipe, JsonPipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-public-product-list',
@@ -31,6 +32,8 @@ export class ProductListComponent implements OnInit {
 
     return prices.length ? Math.min(...prices) : null;
   }
+
+  protected readonly environment = environment;
 }
 
 
