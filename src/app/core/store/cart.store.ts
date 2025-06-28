@@ -18,6 +18,29 @@ export class CartStore {
     this._cartItemsQuantity.set(0);
   }
 
+  removeItem(productId: string): void {
+    const currentCart = this._cart();
+    if (!currentCart) return;
+
+    const updatedItems = currentCart.items.filter(item => item.id !== productId);
+
+
+    if (updatedItems.length === 0) {
+      this.clearCart();
+      return;
+    }
+
+    const updatedCart: Cart = {
+      ...currentCart,
+      items: updatedItems,
+    };
+
+    this._cart.set({ ...updatedCart, items: [...updatedItems] });
+
+    const newQuantity = updatedItems.reduce((sum, item) => sum + item.quantity, 0);
+    this._cartItemsQuantity.set(newQuantity);
+  }
+
   setCartItemsQuantity(cartItemsQuantity: number) {
     this._cartItemsQuantity.set(cartItemsQuantity);
   }

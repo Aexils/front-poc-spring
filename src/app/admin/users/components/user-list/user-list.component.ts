@@ -5,6 +5,7 @@ import {DatePipe} from '@angular/common';
 import {UserService} from '../../services/user.service';
 import {User} from '../../../../shared/models/user.model';
 import {UserFormComponent} from '../user-form/user-form.component';
+import {ToastService} from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-components-profile',
@@ -25,6 +26,7 @@ export class UsersComponent implements OnInit{
 
   private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
+  private readonly toastService = inject(ToastService);
 
   async ngOnInit(): Promise<void> {
     this.dataSource = await this.userService.getAllUsers();
@@ -55,11 +57,11 @@ export class UsersComponent implements OnInit{
 
     const user: User = this.userForm.value;
     this.userService.updateUser(user).then(() => {
-      console.log('Utilisateur mis à jour');
       this.closeModal();
       this.refreshUsers();
+      this.toastService.show('Utilisateur mit à jour', 'success')
     }).catch((err) => {
-      console.error('Erreur lors de la mise à jour :', err);
+      this.toastService.show(`Erreur lors de la mise à jour : ${err}`, 'error')
     });
   }
 

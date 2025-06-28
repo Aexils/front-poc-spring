@@ -6,7 +6,8 @@ import {CurrencyPipe} from '@angular/common';
 import {Cart, CartItem} from '../../../../shared/models/cart.model';
 import {CartService} from '../../../../core/services/cart.service';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {CartStore} from '../../../../core/store/cart.store';
+import {AuthStore} from '../../../../core/store/auth.store';
+import {ToastService} from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -22,7 +23,8 @@ export class ProductDetailComponent implements OnInit{
   private route = inject(ActivatedRoute)
   private productService = inject(ProductService)
   private cartService = inject(CartService)
-  private cartItemsQuantityStore = inject(CartStore);
+  private toast = inject(ToastService)
+  private user = inject(AuthStore).user
   private fb = inject(FormBuilder);
 
   product!: ProductDTO;
@@ -59,15 +61,19 @@ export class ProductDetailComponent implements OnInit{
   }
 
   async onSubmit(): Promise<void> {
-    if (this.form.valid) {
-      const dto: Partial<CartItem> = {
-        quantity: this.form.value.quantity,
-        variantId: this.form.value.variantId
-      };
+    if (this.user()) {
+      if (this.form.valid) {
+        const dto: Partial<CartItem> = {
+          quantity: this.form.value.quantity,
+          variantId: this.form.value.variantId
+        };
 
-      await this.cartService.getOrCreateCartForUser()
-      await this.cartService.addItemToCart(dto)
+        await this.cartService.getOrCreateCartForUser()
+        await this.cartService.addItemToCart(dto)
+        this.toast.show("Produit ajouté au panier", 'success')
+      }
     }
+    this.toast.show('Vous n\'êtes pas connecté(e)', 'warning')
   }
 
   onVariantChange(): void {

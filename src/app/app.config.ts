@@ -10,11 +10,14 @@ import { routes } from './app.routes';
 import {provideAuth0} from '@auth0/auth0-angular';
 import {provideHttpClient} from '@angular/common/http';
 import {AuthService} from './core/services/auth.service';
+import {CategoryService} from './core/services/category.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAppInitializer( async () => {
       const authService = inject(AuthService)
+      const categoryService = inject(CategoryService)
+      await categoryService.getAll()
       return authService.getCurrentUser()
     }),
     provideBrowserGlobalErrorListeners(),

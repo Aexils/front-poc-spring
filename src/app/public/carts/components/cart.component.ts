@@ -3,6 +3,7 @@ import {CartService} from '../../../core/services/cart.service';
 import {CartStore} from '../../../core/store/cart.store';
 import {CartItem} from '../../../shared/models/cart.model';
 import {CurrencyPipe, KeyValuePipe} from '@angular/common';
+import {AuthStore} from '../../../core/store/auth.store';
 
 @Component({
   selector: 'app-public-carts',
@@ -17,6 +18,7 @@ import {CurrencyPipe, KeyValuePipe} from '@angular/common';
 export class CartComponent implements OnInit {
   cartService = inject(CartService)
   cartStore = inject(CartStore)
+  user = inject(AuthStore).user
 
   groupedItems: { [category: string]: CartItem[] } = {};
 

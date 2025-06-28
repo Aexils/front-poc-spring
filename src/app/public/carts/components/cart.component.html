@@ -1,6 +1,16 @@
 <div class="container py-4">
   <h2 class="mb-4">🛒 Votre panier</h2>
 
+  @if (!user()) {
+    <div class="card bg-dark text-light mb-3 shadow-sm border-0">
+      <div class="row g-0 align-items-center">
+        <div class="col-auto">
+            Vous n'êtes pas connecté(e)
+        </div>
+      </div>
+    </div>
+  }
+
   @for (category of groupedItems | keyvalue; track category.key) {
     <h4 class="mt-4 border-bottom pb-2 text-primary">{{ category.key }}</h4>
 
@@ -38,8 +48,8 @@
         </div>
       </div>
     }
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-success w-25">Continuer</button>
+    </div>
   }
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-success w-25">Continuer</button>
-  </div>
 </div>

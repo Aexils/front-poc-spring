@@ -15,6 +15,7 @@ import {
   ProductVariant
 } from '../../../../shared/models/product.model';
 import {CommonModule} from '@angular/common';
+import {ToastService} from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-products-form',
@@ -38,6 +39,8 @@ export class ProductFormComponent implements OnInit {
   productId: string | null = null;
   categories = signal<Category[]>([]);
   attributeTemplates: DynamicAttributeTemplate[] = [];
+
+  private readonly toastService = inject(ToastService);
 
   variants: ProductVariant[] = [];
 
@@ -164,7 +167,8 @@ export class ProductFormComponent implements OnInit {
   }
 
   async onSubmit() {
-    if (!this.form.valid) return;
+    if (!this.form.valid)
+      this.toastService.show('Formulaire invalide', 'error')
 
     const rawValue = this.form.getRawValue();
 
@@ -194,8 +198,10 @@ export class ProductFormComponent implements OnInit {
     if (!this.productId) {
       const created = await firstValueFrom(await this.productService.create(data));
       this.productId = created.id;
+      this.toastService.show('Produit créé avec succès', 'success')
     } else {
       await firstValueFrom(await this.productService.update(this.productId, data));
+      this.toastService.show('Produit mit à jour avec succès', 'success')
     }
 
     // ✅ Upload des images dans les deux cas

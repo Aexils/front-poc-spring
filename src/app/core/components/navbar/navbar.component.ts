@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectorRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
@@ -11,6 +11,7 @@ import {AuthService} from '@auth0/auth0-angular';
 import {CategoryStore} from '../../store/category.store';
 import {CartService} from '../../services/cart.service';
 import {CartStore} from '../../store/cart.store';
+import {ToastService} from '../../services/toast.service';
 
 @Component({
   selector: 'app-navbar',
@@ -28,11 +29,13 @@ import {CartStore} from '../../store/cart.store';
 })
 export class NavbarComponent implements OnInit {
   protected readonly UserRole = UserRole;
+  private readonly toastService = inject(ToastService);
   user = inject(AuthStore).user;
   auth = inject(AuthService);
   categories = inject(CategoryStore).categories
   cartService = inject(CartService)
   cartStore = inject(CartStore)
+  cdr = inject(ChangeDetectorRef)
 
   quantity = 0;
   categorySelected = 'Toutes catégories'
@@ -69,7 +72,6 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       const cart = this.cartStore.cart();
-      console.log(cart);
       if (cart) {
         let q = 0;
         for (const item of cart.items) {
@@ -82,16 +84,7 @@ export class NavbarComponent implements OnInit {
 
   async deleteCartItem(cartItemId: string) {
     await this.cartService.deleteItemCart(cartItemId)
-    this.cartStore.clearCartItemsQuantity()
-    await this.cartService.getOrCreateCartForUser()
-    const cart = this.cartStore.cart()
-    if (cart) {
-      for (const item of cart.items) {
-        this.quantity += item.quantity
-      }
-      this.cartStore.setCartItemsQuantity(this.quantity)
-      this.cartStore.clearCart()
-      this.cartStore.setCart(cart)
-    }
+    this.cartStore.removeItem(cartItemId);
+    this.toastService.show('Produit supprimé du panier', 'success')
   }
 }

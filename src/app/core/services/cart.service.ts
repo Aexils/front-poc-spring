@@ -25,8 +25,6 @@ export class CartService {
 
     if (!token) return;
 
-    this.cartStore.clearCartItemsQuantity();
-
     const cart = await firstValueFrom(
       this.http.get<Cart>(this.baseUrl, {
         headers: {
@@ -38,7 +36,6 @@ export class CartService {
 
     this.cartStore.setCart(cart);
   }
-
 
   async addItemToCart(cartItem: Partial<CartItem>): Promise<Cart> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
@@ -61,10 +58,10 @@ export class CartService {
     return cart;
   }
 
-  async deleteItemCart(cartItemId: string): Promise<Cart> {
+  async deleteItemCart(cartItemId: string): Promise<void> {
     const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
 
-    return await firstValueFrom(this.http.delete<Cart>(`${this.baseUrl}/items/${cartItemId}`,
+    await firstValueFrom(this.http.delete<Cart>(`${this.baseUrl}/items/${cartItemId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

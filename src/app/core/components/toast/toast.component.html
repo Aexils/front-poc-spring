@@ -1,0 +1,22 @@
+<div
+        class="toast fade"
+        [class.show]="visible"
+        [ngClass]="[
+    'text-white',
+    toast.type === 'success' ? 'bg-success' :
+    toast.type === 'error' ? 'bg-danger' :
+    toast.type === 'info' ? 'bg-info' :
+    toast.type === 'warning' ? 'bg-warning text-dark' : ''
+  ]"
+        role="alert"
+>
+    <div class="toast-body d-flex justify-content-between align-items-center">
+        {{ toast.message }}
+        <button
+                type="button"
+                class="btn-close btn-close-white ms-2"
+                (click)="dismiss.emit()"
+                aria-label="Close"
+        ></button>
+    </div>
+</div>

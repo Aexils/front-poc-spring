@@ -1,0 +1,23 @@
+.toast {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  min-width: 250px;
+  max-width: 350px;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .btn-close {
+    filter: brightness(0) invert(1);
+  }
+
+  &.bg-warning .btn-close {
+    filter: none;
+  }
+}

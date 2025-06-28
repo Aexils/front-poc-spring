@@ -34,15 +34,7 @@ export class ProductService {
   }
 
   async getOne(slug: string): Promise<ProductDTO> {
-    const token = await firstValueFrom(this.auth0.getAccessTokenSilently());
-
-    return await firstValueFrom(this.http.get<ProductDTO>(`${this.baseUrl}/products/slug/${slug}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      }));
+    return await firstValueFrom(this.http.get<ProductDTO>(`${this.baseUrl}/products/slug/${slug}`));
   }
 
   async create(product: Partial<ProductCreatePayload>): Promise<Observable<Product>> {

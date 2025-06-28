@@ -8,6 +8,7 @@ export interface User {
   picture: string;
   role: UserRole;
   active: boolean;
+  createdAt: Date;
   customer: Customer;
   cart: Cart;
 }
@@ -17,4 +18,3 @@ export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   ADMIN = 'ADMIN'
 }
-
